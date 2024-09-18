@@ -63,17 +63,21 @@ function App() {
             richWordArr = (wordOtter.preprocess_word_list(await origRichWordArr, preprocessOptions));
         }catch (e) {
             console.warn(e);
+            //TODO: Handle error
         }
 
         console.log(richWordArr);
 
         let result;
         let rngWrapper = new wordOtter.RngWrapper;
-        console.log(maxLetterCount);
         try {
-            result = wordOtter.generate_words(rngWrapper, richWordArr, wordCount, maxLetterCount);
+            let letterCount = (maxLetterCount - ((wordCount-1) * separatorString.length));
+            if (letterCount < 0)
+                throw new Error("Not enough letters to generate desired word count");
+            result = wordOtter.generate_words(rngWrapper, richWordArr, wordCount, letterCount);
         }catch (e) {
             console.warn(e);
+            //TODO: Handle error
         }
 
         result.separators = [];
