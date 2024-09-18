@@ -17,14 +17,14 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 function PasswordCard ({result}) {
     const [open, setOpen] = useState(false);
-    // const [passwordString, setPasswordString] = useState("");
-
 
     let passwordString = "";
-    result.words.forEach((richWord) => {
-        passwordString += richWord.word + "-";
-    });
-    passwordString = passwordString.substring(0, passwordString.length - 1);
+    for (let i = 0; i < result.words.length; i++) {
+        passwordString += result.words[i].word;
+
+        if (i < result.separators.length)
+            passwordString += result.separators[i];
+    }
 
     return (
         <div className="flex flex-col items-center justify-center mt-8">
