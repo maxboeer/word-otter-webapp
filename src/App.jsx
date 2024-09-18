@@ -1,8 +1,9 @@
-import {useState, createElement} from 'react';
+import {useState} from 'react';
 import './App.css'
+
 import {
-    Button, Collapse, IconButton,
-    InputAdornment, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    Button,
+    InputAdornment,
     TextField,
     ToggleButton,
     ToggleButtonGroup,
@@ -11,15 +12,14 @@ import {
 
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import GradeIcon from '@mui/icons-material/Grade';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import PasswordCard from "./components/PasswordCard/PasswordCard.jsx";
 
 let wordOtter = import('word_otter');
 let origRichWordArr = fetchWordList();
 let standardOptions = ['case', 'special'];
 let wordCount = 2;
-let maxLetterCount = 25;
+let maxLetterCount = 15;
 
 async function fetchWordList() {
     const wordlist = (await import('../wortliste.json')).default;
@@ -35,6 +35,7 @@ async function fetchWordList() {
     return richwordArr;
 }
 
+//TODO add features: sepdigit, sepchar, exclude regex
 
 function App() {
     const [wordCountDisplay, setWordCountDisplay] = useState(wordCount);
@@ -60,7 +61,7 @@ function App() {
 
         let result;
         try {
-            result = wordOtter.generate_words(new wordOtter.RngWrapper, richWordArr, wordCount, 25);
+            result = wordOtter.generate_words(new wordOtter.RngWrapper, richWordArr, wordCount, maxLetterCount);
         }catch (e) {
             console.warn(e);
         }
@@ -73,6 +74,8 @@ function App() {
     return (
         <>
             <div className="flex flex-col w-3/4 h-full items-center justify-start mx-auto py-4">
+                {/*<div className="w-24 mb-8">*/}
+                {/*</div>*/}
                 <div className="flex flex-row mb-4 gap-x-3">
                     <ToggleButtonGroup
                         value={standardOptionsDisplay}
@@ -92,54 +95,58 @@ function App() {
                             </ToggleButton>
                         </Tooltip>
                     </ToggleButtonGroup>
-                    <Tooltip title="word count">
-                        <TextField
-                            label="length"
-                            type="number"
-                            value={wordCountDisplay}
-                            slotProps={{
-                                inputLabel: {
-                                    shrink: true,
-                                },
-                                input: {
-                                    endAdornment: <InputAdornment position="end">words</InputAdornment>,
-                                },
-                            }}
-                            onChange={(event) => {
-                                let value = Number(event.target.value);
-                                if (!isNaN(value) && value >= 1) {
-                                    wordCount = value;
-                                } else {
-                                    wordCount = 1;
-                                }
-                                setWordCountDisplay(wordCount);
-                            }}
-
-                        />
-                    </Tooltip>
                     <Tooltip title="maximum password length">
                         <TextField
                             label="max length"
                             type="number"
                             value={maxLetterCountDisplay}
+                            className={"w-36"}
                             slotProps={{
                                 inputLabel: {
                                     shrink: true,
                                 },
                                 input: {
-                                    endAdornment: <InputAdornment position="end">letters</InputAdornment>,
+                                    endAdornment: <InputAdornment position="end">{(maxLetterCountDisplay != 1 ? (maxLetterCountDisplay === "" ? "infinite" : "letters") : "letter")}</InputAdornment>,
                                 },
                             }}
                             onChange={(event) => {
                                 let value = Number(event.target.value);
-                                if (!isNaN(value) && value >= 1) {
-                                    maxLetterCount = value;
-                                    setMaxLetterCountDisplay(maxLetterCount.toString());
-                                } else {
+                                if (isNaN(value) || value < 1 || value > 1000) {
                                     maxLetterCount = Number.MAX_SAFE_INTEGER;
                                     setMaxLetterCountDisplay("");
+                                }else {
+                                    maxLetterCount = value;
+                                    setMaxLetterCountDisplay(maxLetterCount.toString());
                                 }
 
+                            }}
+
+                        />
+                    </Tooltip>
+                    <Tooltip title="word count">
+                        <TextField
+                            variant="standard"
+                            label=" "
+                            type="number"
+                            size="medium"
+                            value={wordCountDisplay}
+                            className={"w-24"}
+                            slotProps={{
+                                inputLabel: {
+                                    shrink: true,
+                                },
+                                input: {
+                                    endAdornment: <InputAdornment position="end">{(wordCountDisplay != 1 ? "words" : "word")}</InputAdornment>,
+                                },
+                            }}
+                            onChange={(event) => {
+                                let value = Number(event.target.value);
+                                if (isNaN(value) || value < 1)
+                                    value = 1;
+                                else if (value > 100)
+                                    value = 100;
+                                wordCount = value;
+                                setWordCountDisplay(wordCount);
                             }}
 
                         />

@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import parse from 'html-react-parser';
+
 import {
     Collapse,
-    Divider,
     IconButton,
     Table,
     TableBody,
@@ -11,6 +11,7 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
+
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
