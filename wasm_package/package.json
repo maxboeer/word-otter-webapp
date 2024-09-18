@@ -1,0 +1,17 @@
+{
+  "name": "word_otter",
+  "type": "module",
+  "version": "0.4.0",
+  "files": [
+    "libword_otter_bg.wasm",
+    "libword_otter.js",
+    "libword_otter_bg.js",
+    "libword_otter.d.ts"
+  ],
+  "main": "libword_otter.js",
+  "types": "libword_otter.d.ts",
+  "sideEffects": [
+    "./libword_otter.js",
+    "./snippets/*"
+  ]
+}
