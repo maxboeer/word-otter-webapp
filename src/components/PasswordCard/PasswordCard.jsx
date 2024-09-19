@@ -28,7 +28,7 @@ function PasswordCard ({result}) {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            <div className="flex flex-row items-center justify-center">
+            <div className="flex flex-row items-center justify-center p-2">
               <IconButton
                   size="small"
                   onClick={() => setOpen(!open)}

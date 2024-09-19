@@ -86,14 +86,22 @@ function App() {
         let result;
         let rngWrapper = new wordOtter.RngWrapper;
         try {
-            let letterCount = (maxLetterCount - ((wordCount-1) * separatorString.length));
-            if (letterCount < 0)
-                throw new Error("Not enough letters to generate desired word count");
+            if (maxLetterCount !== Number.MAX_SAFE_INTEGER) {
+                let letterCount = (maxLetterCount - ((wordCount-1) * separatorString.length));
+                if (letterCount < 0)
+                    throw new Error("Not enough letters to generate desired word count");
 
-            const generationStartTime = window.performance.now();
-            result = wordOtter.generate_words(rngWrapper, richWordArr, wordCount, letterCount);
-            if (showTimers)
-                console.log("%c[TIMER]:%c Password generated in %c" + (window.performance.now() - generationStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+                const generationStartTime = window.performance.now();
+                result = wordOtter.generate_words(rngWrapper, richWordArr, wordCount, letterCount);
+                if (showTimers)
+                    console.log("%c[TIMER]:%c Password generated in %c" + (window.performance.now() - generationStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+            }else {
+                const generationStartTime = window.performance.now();
+                result = wordOtter.generate_words_naive(rngWrapper, richWordArr, wordCount);
+                if (showTimers)
+                    console.log("%c[TIMER]:%c Password naively generated in %c" + (window.performance.now() - generationStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+            }
+
 
         }catch (e) {
             console.warn(e);
@@ -118,7 +126,7 @@ function App() {
     return (
         <>
             <div className={"flex flex-col w-dvw h-dvh max-h-dvh items-center justify-between overflow-hidden"}>
-                <main className="flex flex-col w-3/4 grow shrink items-center justify-start mx-auto mt-12 overflow-hidden">
+                <main className="flex flex-col w-3/4 grow shrink items-center justify-start mx-auto pt-4 mt-8 overflow-hidden">
                     {/*<div className="w-24 mb-8">*/}
                     {/*</div>*/}
                     <div className="flex flex-col w-fit h-fit items-center justify-start">
@@ -168,8 +176,7 @@ function App() {
                                     onChange={(event) => {
                                         let value = Number(event.target.value);
                                         if (isNaN(value) || value < 1 || value > 1000) {
-                                            //TODO: fix issue with sending biggest int value as max length (somehow longer loading times for bigger values)
-                                            maxLetterCount = 2000; // maxLetterCount = Number.MAX_SAFE_INTEGER;
+                                            maxLetterCount = Number.MAX_SAFE_INTEGER;
                                             setMaxLetterCountDisplay("");
                                         }else {
                                             maxLetterCount = value;
