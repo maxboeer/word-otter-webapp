@@ -9,8 +9,18 @@ import '@fontsource/roboto/700.css';
 
 import './index.css'
 
+import {createTheme, ThemeProvider} from "@mui/material";
+
+const theme = createTheme({
+    colorSchemes: {
+        dark: true,
+    },
+});
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+      <ThemeProvider theme={theme}>
+          <App />
+      </ThemeProvider>
   </StrictMode>,
 )
