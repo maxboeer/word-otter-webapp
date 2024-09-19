@@ -52,6 +52,14 @@ async function fetchWordList() {
     return richwordArr;
 }
 
+async function deepcopyRichwordArr(richwordArr) {
+    let returnArr = [];
+    richwordArr.forEach((richWord) => {
+        returnArr.push(new wordOtter.RichWord(richWord.word, richWord.meanings));
+    })
+    return returnArr;
+}
+
 //TODO: show variations and entropy
 function App() {
     const [wordCountDisplay, setWordCountDisplay] = useState(wordCount);
@@ -65,6 +73,7 @@ function App() {
     async function computePassword(){
         const computeStartTime = window.performance.now();
         wordOtter = await wordOtter;
+        let origRichWordArrCopy = await deepcopyRichwordArr(await origRichWordArr);
 
         let preprocessOptions = await new wordOtter.PreprocessOptions(standardOptions.includes('case'), standardOptions.includes('special'));
         // console.log(preprocessOptions);
@@ -73,7 +82,7 @@ function App() {
         // richWordArr = origRichWordArr;
         try {
             const preprocessStartTime = window.performance.now();
-            richWordArr = (wordOtter.preprocess_word_list(await origRichWordArr, preprocessOptions));
+            richWordArr = (wordOtter.preprocess_word_list(origRichWordArrCopy, preprocessOptions));
             if (showTimers)
                 console.log("%c[TIMER]:%c Wordlist preprocessed in %c" + (window.performance.now() - preprocessStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
         }catch (e) {
@@ -120,7 +129,6 @@ function App() {
         setResults(prev => (prepend(result, prev)));
         if (showTimers)
             console.log("%c[TIMER]:%c Total computation time: %c" + (window.performance.now() - computeStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
-        console.log(result);
     }
 
     return (
@@ -271,6 +279,7 @@ function App() {
                         }}
                     >Generate</Button>
 
+                    {/*TODO: fix long word formatting errors*/}
                     <div className="flex flex-col gap-y-4 w-fit h-full overflow-y-auto overflow-x-hidden my-8">
                         {results.map((result, index) => (<PasswordCard key={index} result={result} />))}
                     </div>
