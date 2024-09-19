@@ -248,7 +248,7 @@ function App() {
                         {results.map((result, index) => (<PasswordCard key={index} result={result} />))}
                     </div>
                 </main>
-                <footer className={"h-16 w-full dark:bg-zinc-700 flex flex-row items-center justify-center"}>
+                <footer className={"h-16 w-full bg-zinc-200 dark:bg-zinc-700 flex flex-row items-center justify-center"}>
                     <Typography fontSize={"small"}>
                         Made with 🍕 by <Link href={"https://github.com/maxboeer"} color={"textSecondary"} underline={"none"}>maxboeer</Link> and <Link href={"https://github.com/Schuwi"} color={"textSecondary"} underline={"none"}>Schuwi</Link>.
                     </Typography>
