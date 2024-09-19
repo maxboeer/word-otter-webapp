@@ -30,6 +30,7 @@ function PasswordCard ({result}) {
         <div className="flex flex-col items-center justify-center mt-8">
             <div className="flex flex-row items-center justify-center">
               <IconButton
+                  size="small"
                   onClick={() => setOpen(!open)}
               >
                   {open ?
