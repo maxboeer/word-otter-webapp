@@ -250,7 +250,7 @@ function App() {
                 </main>
                 <footer className={"h-16 w-full dark:bg-zinc-700 flex flex-row items-center justify-center"}>
                     <Typography fontSize={"small"}>
-                        Made with 🔥 by <Link href={"https://github.com/maxboeer"} color={"textSecondary"} underline={"none"}>maxboeer</Link> and <Link href={"https://github.com/Schuwi"} color={"textSecondary"} underline={"none"}>Schuwi</Link>.
+                        Made with 🍕 by <Link href={"https://github.com/maxboeer"} color={"textSecondary"} underline={"none"}>maxboeer</Link> and <Link href={"https://github.com/Schuwi"} color={"textSecondary"} underline={"none"}>Schuwi</Link>.
                     </Typography>
                     <Tooltip title="open this project on github">
                         <IconButton href="https://github.com/maxboeer/word-otter-webapp" target={"_blank"}>
