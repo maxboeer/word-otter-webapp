@@ -1,3 +1,5 @@
+const showTimers = true;
+
 import {useState} from 'react';
 import './App.css'
 
@@ -30,16 +32,23 @@ let wordCount = 2;
 let maxLetterCount = 15;
 
 async function fetchWordList() {
+    const wordListStartTime = window.performance.now();
     const wordlist = (await import('../wortliste.json')).default;
+    if (showTimers)
+        console.log("%c[TIMER]:%c Wordlist loaded in %c" + (window.performance.now() - wordListStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
 
     let richwordArr = [];
     wordOtter = await wordOtter;
-    console.log("wasm successfully loaded");
+    // console.log("%cwasm successfully loaded", 'color: green');
 
+    const parsingStartTime = window.performance.now();
     await wordlist.forEach((wordObj) => {
         richwordArr.push(new wordOtter.RichWord(wordObj.word, wordObj.meanings));
     });
-    console.log("word list successfully loaded");
+    if (showTimers)
+        console.log("%c[TIMER]:%c Wordlist parsed in %c" + (window.performance.now() - parsingStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+    // console.log("%cword list successfully loaded", 'color: green');
+
     return richwordArr;
 }
 
@@ -53,6 +62,7 @@ function App() {
     const [results, setResults] = useState([]);
 
     async function computePassword(){
+        const computeStartTime = window.performance.now();
         wordOtter = await wordOtter;
 
         let preprocessOptions = await new wordOtter.PreprocessOptions(standardOptions.includes('case'), standardOptions.includes('special'));
@@ -61,13 +71,16 @@ function App() {
         let richWordArr = [];
         // richWordArr = origRichWordArr;
         try {
+            const preprocessStartTime = window.performance.now();
             richWordArr = (wordOtter.preprocess_word_list(await origRichWordArr, preprocessOptions));
+            if (showTimers)
+                console.log("%c[TIMER]:%c Wordlist preprocessed in %c" + (window.performance.now() - preprocessStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
         }catch (e) {
             console.warn(e);
             //TODO: Handle error
         }
 
-        console.log(richWordArr);
+        // console.log(richWordArr);
 
         let result;
         let rngWrapper = new wordOtter.RngWrapper;
@@ -75,7 +88,12 @@ function App() {
             let letterCount = (maxLetterCount - ((wordCount-1) * separatorString.length));
             if (letterCount < 0)
                 throw new Error("Not enough letters to generate desired word count");
+
+            const generationStartTime = window.performance.now();
             result = wordOtter.generate_words(rngWrapper, richWordArr, wordCount, letterCount);
+            if (showTimers)
+                console.log("%c[TIMER]:%c Password generated in %c" + (window.performance.now() - generationStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+
         }catch (e) {
             console.warn(e);
             //TODO: Handle error
@@ -90,9 +108,10 @@ function App() {
             }
         }
 
-        console.log(result);
-
         setResults(prev => (prepend(result, prev)));
+        if (showTimers)
+            console.log("%c[TIMER]:%c Total computation time: %c" + (window.performance.now() - computeStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+        console.log(result);
     }
 
     return (
