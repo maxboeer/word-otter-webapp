@@ -27,7 +27,7 @@ function PasswordCard ({result}) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center mt-8">
+        <div className="flex flex-col items-center justify-center">
             <div className="flex flex-row items-center justify-center">
               <IconButton
                   size="small"
@@ -40,8 +40,8 @@ function PasswordCard ({result}) {
               </IconButton>
               <span className="text-xl font-bold">{passwordString}</span>
             </div>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <TableContainer>
+            <Collapse in={open} timeout="auto" unmountOnExit> {/*className={"pt-4"}*/}
+              <TableContainer> {/*className={"max-h-72 overflow-y-auto"}*/}
                   <Table>
                       <TableHead>
                           <TableRow>

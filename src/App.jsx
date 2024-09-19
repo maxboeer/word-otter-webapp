@@ -52,6 +52,7 @@ async function fetchWordList() {
     return richwordArr;
 }
 
+//TODO: show variations and entropy
 function App() {
     const [wordCountDisplay, setWordCountDisplay] = useState(wordCount);
     const [maxLetterCountDisplay, setMaxLetterCountDisplay] = useState(maxLetterCount.toString());
@@ -116,8 +117,8 @@ function App() {
 
     return (
         <>
-            <div className={"flex flex-col w-dvw h-dvh items-center justify-between"}>
-                <main className="flex flex-col w-3/4 h-auto items-center justify-start mx-auto py-4 mt-8">
+            <div className={"flex flex-col w-dvw h-dvh max-h-dvh items-center justify-between overflow-hidden"}>
+                <main className="flex flex-col w-3/4 grow shrink items-center justify-start mx-auto mt-12 overflow-hidden">
                     {/*<div className="w-24 mb-8">*/}
                     {/*</div>*/}
                     <div className="flex flex-col w-fit h-fit items-center justify-start">
@@ -263,11 +264,11 @@ function App() {
                         }}
                     >Generate</Button>
 
-                    <div className="flex flex-col gap-y-4 w-fit h-full overflow-y-auto overflow-x-hidden">
+                    <div className="flex flex-col gap-y-4 w-fit h-full overflow-y-auto overflow-x-hidden my-8">
                         {results.map((result, index) => (<PasswordCard key={index} result={result} />))}
                     </div>
                 </main>
-                <footer className={"h-16 w-full bg-zinc-200 dark:bg-zinc-700 flex flex-row items-center justify-center"}>
+                <footer className={"h-16 w-full bg-zinc-200 dark:bg-zinc-700 flex flex-row items-center justify-center shrink-0"}>
                     <Typography fontSize={"small"}>
                         Made with 🍕 by <Link href={"https://github.com/maxboeer"} color={"textSecondary"} underline={"none"}>maxboeer</Link> and <Link href={"https://github.com/Schuwi"} color={"textSecondary"} underline={"none"}>Schuwi</Link>.
                     </Typography>
