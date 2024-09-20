@@ -8,12 +8,10 @@ Inside the root folder of the repository run <br/>
 ## Usage
 The project uses Vite's default commands.
 
-To run the development server run
-
+To run the development server run<br/>
 `npm run dev`
 
-To build for production run
-
+To build for production run<br/>
 `npm run build`
 
 ### Copyright information
