@@ -4,6 +4,7 @@ import {useState} from 'react';
 import './App.css'
 
 import {
+    Alert,
     Button, Collapse, IconButton,
     InputAdornment, Link,
     TextField,
@@ -32,24 +33,29 @@ let wordCount = 2;
 let maxLetterCount = 15;
 
 async function fetchWordList() {
-    const wordListStartTime = window.performance.now();
-    const wordlist = (await import('../wortliste.json')).default;
-    if (showTimers)
-        console.log("%c[TIMER]:%c Wordlist loaded in %c" + (window.performance.now() - wordListStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+    try {
+        const wordListStartTime = window.performance.now();
+        const wordlist = (await import('../wortliste.json')).default;
+        if (showTimers)
+            console.log("%c[TIMER]:%c Wordlist loaded in %c" + (window.performance.now() - wordListStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
 
-    let richwordArr = [];
-    wordOtter = await wordOtter;
-    // console.log("%cwasm successfully loaded", 'color: green');
+        let richwordArr = [];
+        wordOtter = await wordOtter;
+        // console.log("%cwasm successfully loaded", 'color: green');
 
-    const parsingStartTime = window.performance.now();
-    await wordlist.forEach((wordObj) => {
-        richwordArr.push(new wordOtter.RichWord(wordObj.word, wordObj.meanings));
-    });
-    if (showTimers)
-        console.log("%c[TIMER]:%c Wordlist parsed in %c" + (window.performance.now() - parsingStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
-    // console.log("%cword list successfully loaded", 'color: green');
+        const parsingStartTime = window.performance.now();
+        await wordlist.forEach((wordObj) => {
+            richwordArr.push(new wordOtter.RichWord(wordObj.word, wordObj.meanings));
+        });
+        if (showTimers)
+            console.log("%c[TIMER]:%c Wordlist parsed in %c" + (window.performance.now() - parsingStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
+        // console.log("%cword list successfully loaded", 'color: green');
 
-    return richwordArr;
+        return richwordArr;
+    }catch (e) {
+        console.error(e);
+        window.location.reload(true);
+    }
 }
 
 async function deepcopyRichwordArr(richwordArr) {
@@ -69,6 +75,10 @@ function App() {
     const [seperatorOption, setSeperatorOption] = useState(separator);
     const [seperatorStringDisplay, setSeperatorStringDisplay] = useState(separatorString);
     const [results, setResults] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
+
+    if(errorMessage)
+        setTimeout(() => {setErrorMessage(null)}, 4000);
 
     async function computePassword(){
         const computeStartTime = window.performance.now();
@@ -76,6 +86,7 @@ function App() {
         let origRichWordArrCopy = await deepcopyRichwordArr(await origRichWordArr);
 
         let preprocessOptions = await new wordOtter.PreprocessOptions(standardOptions.includes('case'), standardOptions.includes('special'));
+
         // console.log(preprocessOptions);
 
         let richWordArr = [];
@@ -86,8 +97,8 @@ function App() {
             if (showTimers)
                 console.log("%c[TIMER]:%c Wordlist preprocessed in %c" + (window.performance.now() - preprocessStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
         }catch (e) {
-            console.warn(e);
-            //TODO: Handle error
+            setErrorMessage(e.message);
+            return;
         }
 
         // console.log(richWordArr);
@@ -113,8 +124,8 @@ function App() {
 
 
         }catch (e) {
-            console.warn(e);
-            //TODO: Handle error
+            setErrorMessage(e.message);
+            return;
         }
 
         result.separators = [];
@@ -134,6 +145,9 @@ function App() {
     return (
         <>
             <div className={"flex flex-col w-dvw h-dvh max-h-dvh items-center justify-between overflow-hidden"}>
+                <Collapse in={errorMessage !== null}>
+                    <Alert severity="error" onClose={() => {setErrorMessage(null)}} className={"mt-10 mb-[-1rem]"}>{errorMessage}</Alert>
+                </Collapse>
                 <main className="flex flex-col w-3/4 grow shrink items-center justify-start mx-auto pt-4 mt-8 overflow-hidden">
                     {/*<div className="w-24 mb-8">*/}
                     {/*</div>*/}
@@ -281,7 +295,7 @@ function App() {
 
                     {/*TODO: fix long word formatting errors*/}
                     <div className="flex flex-col gap-y-4 w-fit h-full overflow-y-auto overflow-x-hidden my-8">
-                        {results.map((result, index) => (<PasswordCard key={index} result={result} />))}
+                        {results.map((result, index) => (<PasswordCard key={results.length-1 - index} result={result} />))}
                     </div>
                 </main>
                 <footer className={"h-16 w-full bg-zinc-200 dark:bg-zinc-700 flex flex-row items-center justify-center shrink-0"}>
