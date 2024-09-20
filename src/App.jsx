@@ -78,7 +78,7 @@ function App() {
     const [errorMessage, setErrorMessage] = useState(null);
 
     if(errorMessage)
-        setTimeout(() => {setErrorMessage(null)}, 4000);
+        setTimeout(() => {setErrorMessage(null)}, 6000);
 
     async function computePassword(){
         const computeStartTime = window.performance.now();
@@ -97,7 +97,7 @@ function App() {
             if (showTimers)
                 console.log("%c[TIMER]:%c Wordlist preprocessed in %c" + (window.performance.now() - preprocessStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
         }catch (e) {
-            setErrorMessage(e.message);
+            setErrorMessage(typeof e === "string" ? e : e.message);
             return;
         }
 
@@ -124,7 +124,7 @@ function App() {
 
 
         }catch (e) {
-            setErrorMessage(e.message);
+            setErrorMessage(typeof e === "string" ? e : e.message);
             return;
         }
 
