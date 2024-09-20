@@ -1,4 +1,4 @@
-const showTimers = true;
+const showTimers = false;
 
 import {useState} from 'react';
 import './App.css'
@@ -35,7 +35,7 @@ let maxLetterCount = 15;
 async function fetchWordList() {
     try {
         const wordListStartTime = window.performance.now();
-        const wordlist = (await import('../wortliste.json')).default;
+        const wordlist = (await import('../wordlist_de.json')).default;
         if (showTimers)
             console.log("%c[TIMER]:%c Wordlist loaded in %c" + (window.performance.now() - wordListStartTime).toPrecision(6) + "%cms", 'color: blue', 'color: inherit', 'color: red', 'color: inherit');
 
