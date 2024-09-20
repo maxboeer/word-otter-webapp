@@ -17,4 +17,4 @@ To build for production run
 `npm run build`
 
 ### Copyright information
-Thanks to [Wiktionary](https://www.wiktionary.org) for providing the words used for password generation.
+Thanks to [Wiktionary](https://www.wiktionary.org) for providing the words used for password generation ([wordlist_de.json](wordlist_de.json)).
